@@ -22,7 +22,7 @@ const Meals = () => {
 		<ul id="meals">
 			{loadedMeals.map((meal) => (
 				<li key={meal.id}>
-                    <p>{meal.name}</p>
+                    {meal.name}
                 </li>
 			))}
 		</ul>
