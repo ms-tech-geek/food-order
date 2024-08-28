@@ -39,19 +39,19 @@ const cartReducer = (state, action) => {
 		const updatedItems = [...state.items];
 
 		if (existingCartItem.quantity === 1) {
-			updatedItems.splice[(existingCartItemIndex, 1)];
-		} else {
+			updatedItems.splice(existingCartItemIndex, 1);
+		}
+		 else {
 			const updateItem = {
 				...existingCartItem,
 				quantity: existingCartItem.quantity - 1,
 			};
 
-			updatedItems[existingCartItem] = updateItem;
-
-			return { ...state, items: updatedItems };
+			updatedItems[existingCartItemIndex] = updateItem;
 		}
-	}
 
+		return { ...state, items: updatedItems };
+	}
 };
 export const CartContextProvider = ({ children }) => {
 	const [cart, dispatchCartAction] = useReducer(cartReducer, { items: [] });
