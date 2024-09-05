@@ -1,32 +1,22 @@
-import MealItem from "./MealItem";
-import useHttp from "../hooks/useHttp";
-import Error from './Error'
+import MealItem from "./MealItem.jsx";
+import useHttp from "../hooks/useHttp.js";
+import Error from "./Error.jsx";
 
-const requestConfig = {
-	method: "GET",
-};
+const requestConfig = {};
 
-const Meals = () => {
+export default function Meals() {
 	const {
 		data: loadedMeals,
 		isLoading,
 		error,
-	} = useHttp({
-		url: "http://localhost:3000/meals",
-		config: requestConfig,
-		initialData: [],
-	});
+	} = useHttp("http://localhost:3000/meals", requestConfig, []);
 
 	if (isLoading) {
-		return <p>Fetching Meals...</p>;
+		return <p className="center">Fetching meals...</p>;
 	}
 
-	if(error){
-		return <Error title={`Failed to fetch meals.`} message={error} />
-	}
-
-	if (!loadedMeals) {
-		return <p>No meals found...</p>;
+	if (error) {
+		return <Error title="Failed to fetch meals" message={error} />;
 	}
 
 	return (
@@ -36,6 +26,4 @@ const Meals = () => {
 			))}
 		</ul>
 	);
-};
-
-export default Meals;
+}
