@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const sendHttpRequest = async ({ url, config }) => {
 	const response = await fetch(url, config);
