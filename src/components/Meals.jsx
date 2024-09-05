@@ -1,5 +1,6 @@
 import MealItem from "./MealItem";
 import useHttp from "../hooks/useHttp";
+import Error from './Error'
 
 const requestConfig = {
 	method: "GET",
@@ -18,6 +19,10 @@ const Meals = () => {
 
 	if (isLoading) {
 		return <p>Fetching Meals...</p>;
+	}
+
+	if(error){
+		return <Error title={`Failed to fetch meals.`} message={error} />
 	}
 
 	if (!loadedMeals) {
