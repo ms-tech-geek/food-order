@@ -5,6 +5,14 @@ import Input from "./Input";
 import Button from "./UI/Button";
 import UserProgressContext from "../store/UserProgressContext";
 import { currencyFormatter } from "../util/formatting";
+import useHttp from "../hooks/useHttp";
+
+const requestConfig = {
+	method: "POST",
+	headers: {
+		"Content-Type": "application/json",
+	},
+};
 
 const Checkout = () => {
 	const { items: cartItems } = useContext(CartContext);
@@ -15,31 +23,47 @@ const Checkout = () => {
 		0
 	);
 
+	const {
+		data,
+		isLoading: isSending,
+		error,
+		sendRequest,
+	} = useHttp({
+		url: `http://localhost:3000/orders`,
+		config: requestConfig,
+	});
+
 	const handleCloseCheckout = () => {
 		hideCheckout();
 	};
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
-
 		const fd = new FormData(event.target);
 		const customerData = Object.fromEntries(fd.entries());
 
-		console.log(`customerData`,customerData)
-
-		fetch(`http://localhost:3000/orders`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				order: {
+		sendRequest(
+			JSON.stringify({
+				orders: {
 					items: cartItems,
 					customer: customerData,
 				},
-			}),
-		});
+			})
+		);
 	};
+
+	let actions = (
+		<>
+			<Button type="button" textOnly onClick={handleCloseCheckout}>
+				Close
+			</Button>
+			<Button>Submit Order</Button>
+		</>
+	);
+
+	if (isSending) {
+		actions = <span>Sending order data...</span>;
+	}
 
 	return (
 		<Modal
@@ -56,12 +80,7 @@ const Checkout = () => {
 					<Input label="Postal Code" type="text" id="postal-code" />
 					<Input label="City" type="text" id="city" />
 				</div>
-				<p className="modal-actions">
-					<Button type="button" textOnly onClick={handleCloseCheckout}>
-						Close
-					</Button>
-					<Button>Submit Order</Button>
-				</p>
+				<p className="modal-actions">{actions}</p>
 			</form>
 		</Modal>
 	);
