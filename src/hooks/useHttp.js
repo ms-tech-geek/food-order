@@ -9,10 +9,12 @@ const sendHttpRequest = async ({ url, config }) => {
 			respData.message || `Something went wrong, failed to send http request.`
 		);
 	}
+
+	return respData;
 };
 
-const useHttp = ({ url, config }) => {
-	const [data, setData] = useState();
+const useHttp = ({ url, config, initialData }) => {
+	const [data, setData] = useState(initialData);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState();
 
@@ -28,14 +30,18 @@ const useHttp = ({ url, config }) => {
 	}, [url, config]);
 
 	useEffect(() => {
-		if (config && config.method === "GET") sendRequest();
-	}, [sendRequest, config]);
+		if (config && (config.method === "GET" || !config.method || !config))
+			{
+				sendRequest();
+
+			}
+	}, [sendRequest,config]);
 
 	return {
 		data,
 		isLoading,
 		error,
-        sendRequest
+		sendRequest,
 	};
 };
 
